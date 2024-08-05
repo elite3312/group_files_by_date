@@ -41,7 +41,6 @@ class FileOperation():
             print(e)
 
     def ensure_archive_correctness(self, file_name: str, target_dir: str, archive_dest_root_dir):
-        if target_dir==self.input_dir:return
         target_dir_base_name = os.path.basename(target_dir).split('.')[0]
         target_dir_month = target_dir_base_name.split('_')[1]
         target_dir_year = target_dir_base_name.split('_')[0]
@@ -68,15 +67,19 @@ if __name__=='__main__':
 
 
     
-    all_names = glob.glob(INPUT_DIR)
 
-    call_back=f.archive_file_by_mtime
     opts, args = getopt.getopt(sys.argv[1:], "o", [
                            "--organize"])
     for opt, arg in opts:
         if opt in ("-o", "--organize"):
-            call_back=f.ensure_archive_correctness
+    
         
-    for name in all_names:
-        f.do_operation_on_all_files(
-            target_dir=name, operation=call_back, operation_arguments='.')
+            all_names = glob.glob('20*')
+            for name in all_names:
+                f.do_operation_on_all_files(
+                    target_dir=name, operation=f.ensure_archive_correctness, operation_arguments='.')
+        else:
+            all_names = glob.glob(INPUT_DIR)
+            for name in all_names:
+                f.do_operation_on_all_files(
+                    target_dir=name, operation=f.archive_file_by_mtime, operation_arguments='.')
