@@ -1,0 +1,1 @@
+void seconds_to_time(int seconds,char *res,int display);
