@@ -18,7 +18,7 @@ class FileOperation():
         '''
         runner with callback
         '''
-        print("operation= %s" % operation)
+        #print("operation= %s" % operation)
         all_names = glob.glob(target_dir+'/*')
         for file_name in all_names:
             operation(file_name, target_dir, operation_arguments)
@@ -65,21 +65,20 @@ if __name__=='__main__':
 
     f = FileOperation()
 
-
-    
-
     opts, args = getopt.getopt(sys.argv[1:], "o", [
                            "--organize"])
+    
+    call_back=f.archive_file_by_mtime
+    all_names = glob.glob(INPUT_DIR)
     for opt, arg in opts:
         if opt in ("-o", "--organize"):
     
         
             all_names = glob.glob('20*')
-            for name in all_names:
-                f.do_operation_on_all_files(
-                    target_dir=name, operation=f.ensure_archive_correctness, operation_arguments='.')
-        else:
-            all_names = glob.glob(INPUT_DIR)
-            for name in all_names:
-                f.do_operation_on_all_files(
-                    target_dir=name, operation=f.archive_file_by_mtime, operation_arguments='.')
+            call_back=f.ensure_archive_correctness
+     
+            
+    
+    for name in all_names:
+        f.do_operation_on_all_files(
+                    target_dir=name, operation=call_back, operation_arguments='.')
